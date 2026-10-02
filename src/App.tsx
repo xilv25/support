@@ -34,8 +34,8 @@ import {
 // KONFIGURASI HALAMAN (EDIT TEKS, LINK, KEY, & DUKUNGAN DI SINI)
 // ============================================================================
 export const CONFIG = {
-  // Web3Forms Key (Dapatkan key gratis di https://web3forms.com)
-  web3formsKey: "ISI_KEY_DISINI",
+  // Web3Forms Key membaca dari environment variable VITE_WEB3FORMS_KEY
+  web3formsKey: (import.meta.env.VITE_WEB3FORMS_KEY || "").trim(),
   targetEmail: "xilvnycez@gmail.com",
 
   profile: {
@@ -206,6 +206,8 @@ export default function App() {
   const [formStatus, setFormStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [formErrorMessage, setFormErrorMessage] = useState("");
 
+  const isFormConfigured = Boolean(CONFIG.web3formsKey && CONFIG.web3formsKey.length > 0);
+
   // Lock body scroll when modal is open + Listen for Escape key
   useEffect(() => {
     if (showManualModal) {
@@ -287,6 +289,11 @@ export default function App() {
   const handleSendEmailMessage = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (!isFormConfigured) {
+      triggerToast("Form belum dikonfigurasi. VITE_WEB3FORMS_KEY belum diisi.");
+      return;
+    }
+
     // Honeypot check
     if (honeypot) {
       return;
@@ -305,12 +312,8 @@ export default function App() {
       : "Sesuai keiklasan";
 
     try {
-      const keyToUse = CONFIG.web3formsKey !== "ISI_KEY_DISINI" 
-        ? CONFIG.web3formsKey 
-        : "02ad0bd6-4b89-4933-9fb8-59c735221b06";
-
       const formData = new FormData();
-      formData.append("access_key", keyToUse);
+      formData.append("access_key", CONFIG.web3formsKey);
       formData.append("subject", `Pesan Dukungan Donasi dari ${formName.trim()}`);
       formData.append("from_name", "Website Donasi Schneider");
       formData.append("nama", formName.trim());
@@ -873,6 +876,14 @@ export default function App() {
 
           <form onSubmit={handleSendEmailMessage} className="bg-[#FFFDF0] neo-border p-4 sm:p-5 space-y-4">
             
+            {/* Warning jika form belum dikonfigurasi key */}
+            {!isFormConfigured && (
+              <div className="bg-[#FFDE59] text-black neo-border-sm p-3 text-xs font-black flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0 stroke-[3]" />
+                <span>Form belum dikonfigurasi. Masukkan VITE_WEB3FORMS_KEY di file environment untuk mengaktifkan pengiriman email.</span>
+              </div>
+            )}
+
             {/* Anti-Spam Honeypot Field */}
             <input
               type="text"
@@ -896,7 +907,7 @@ export default function App() {
                   placeholder="Contoh: Budi / Anonim"
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
-                  disabled={formStatus === "loading"}
+                  disabled={!isFormConfigured || formStatus === "loading"}
                   className="w-full bg-white neo-border-sm p-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#FF0055] disabled:opacity-50"
                 />
               </div>
@@ -908,7 +919,7 @@ export default function App() {
                 <select
                   value={formAmount}
                   onChange={(e) => setFormAmount(e.target.value)}
-                  disabled={formStatus === "loading"}
+                  disabled={!isFormConfigured || formStatus === "loading"}
                   className="w-full bg-white neo-border-sm p-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#FF0055] disabled:opacity-50"
                 >
                   <option value="">-- Seikhlasnya --</option>
@@ -930,7 +941,7 @@ export default function App() {
                 value={formMessage}
                 onChange={(e) => setFormMessage(e.target.value)}
                 rows={2}
-                disabled={formStatus === "loading"}
+                disabled={!isFormConfigured || formStatus === "loading"}
                 className="w-full bg-white neo-border-sm p-2.5 text-xs font-bold focus:outline-none focus:ring-2 focus:ring-[#FF0055] disabled:opacity-50"
               />
             </div>
@@ -943,7 +954,9 @@ export default function App() {
 
               {!proofPreview ? (
                 <div className="relative">
-                  <label className="neo-btn bg-white hover:bg-gray-50 text-black p-4 flex flex-col items-center justify-center gap-2 cursor-pointer text-center">
+                  <label className={`neo-btn p-4 flex flex-col items-center justify-center gap-2 text-center ${
+                    !isFormConfigured ? "bg-gray-100 text-gray-500 cursor-not-allowed" : "bg-white hover:bg-gray-50 text-black cursor-pointer"
+                  }`}>
                     <Upload className="w-6 h-6 text-[#FF0055] stroke-[3]" />
                     <span className="text-xs font-black uppercase">
                       UNGGAH GAMBAR BUKTI TRANSFER
@@ -955,7 +968,7 @@ export default function App() {
                       type="file"
                       accept="image/*"
                       onChange={handleFileChange}
-                      disabled={formStatus === "loading"}
+                      disabled={!isFormConfigured || formStatus === "loading"}
                       className="hidden"
                     />
                   </label>
@@ -1018,16 +1031,23 @@ export default function App() {
 
             <button
               type="submit"
-              disabled={formStatus === "loading"}
+              disabled={!isFormConfigured || formStatus === "loading"}
               className={`neo-btn w-full py-3 px-6 text-xs sm:text-sm uppercase font-black flex items-center justify-center gap-2 transition-colors ${
-                formStatus === "success"
+                !isFormConfigured
+                  ? "bg-gray-300 text-gray-700 cursor-not-allowed opacity-70"
+                  : formStatus === "success"
                   ? "bg-[#00FF66] text-black"
                   : formStatus === "error"
                   ? "bg-[#FF0055] text-white"
                   : "bg-[#FF0055] text-white hover:bg-black"
               }`}
             >
-              {formStatus === "loading" ? (
+              {!isFormConfigured ? (
+                <>
+                  <AlertCircle className="w-4 h-4 stroke-[3]" />
+                  <span>FORM BELUM DIKONFIGURASI</span>
+                </>
+              ) : formStatus === "loading" ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin stroke-[3]" />
                   <span>MENGIRIM...</span>

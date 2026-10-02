@@ -1,0 +1,6 @@
+{
+  "name": "Dukung Schneider - Donasi QRIS",
+  "description": "Website donasi statis Neo-Brutalism untuk Schneider. Scan QRIS, pilih nominal, dan kirim dukungan!",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,88 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --font-heading: 'Archivo Black', 'Space Grotesk', sans-serif;
+    --font-sans: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: #FFFDF0;
+    color: #121212;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+/* Custom Neo-Brutalist Utilities */
+.neo-border {
+  border: 3.5px solid #000000;
+}
+
+.neo-border-sm {
+  border: 2px solid #000000;
+}
+
+.neo-shadow {
+  box-shadow: 5px 5px 0px #000000;
+}
+
+.neo-shadow-lg {
+  box-shadow: 8px 8px 0px #000000;
+}
+
+.neo-shadow-sm {
+  box-shadow: 3px 3px 0px #000000;
+}
+
+.neo-btn {
+  border: 3.5px solid #000000;
+  box-shadow: 5px 5px 0px #000000;
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  font-weight: 800;
+}
+
+.neo-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 3px 3px 0px #000000;
+}
+
+.neo-btn:active {
+  transform: translate(5px, 5px);
+  box-shadow: 0px 0px 0px #000000;
+}
+
+/* Halftone / Dot pattern background */
+.bg-dots-pattern {
+  background-image: radial-gradient(#000000 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
+}
+
+.bg-stripes-pattern {
+  background: repeating-linear-gradient(
+    45deg,
+    #000000,
+    #000000 10px,
+    #FFDE59 10px,
+    #FFDE59 20px
+  );
+}
+
+/* Text Stroke utility for brutalist title outline effect */
+.text-stroke-black {
+  -webkit-text-stroke: 2px #000000;
+}
+
+/* Marquee Animation */
+@keyframes marquee {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 20s linear infinite;
+}
+

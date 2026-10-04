@@ -9,12 +9,12 @@ Demo: https://403support-eta.vercel.app
 - Donasi lewat QRIS dan transfer manual (e-wallet / rekening)
 - Form pesan dukungan, dengan unggah bukti transfer yang bersifat opsional
 - Bagian profil dengan tautan sosial
-- Desain brutalism, ikon SVG, tanpa emoji
+- Desain brutalism dengan ikon SVG, tanpa emoji
 - Ringan dan siap deploy di Vercel
 
 ## Tech
 
-Vite + TypeScript. Dibuat di Google AI Studio dan di-deploy di Vercel.
+React 19, TypeScript, Vite, Tailwind CSS 4, Motion, dan Lucide React. Dibuat di Google AI Studio dan di-deploy di Vercel.
 
 ## Menjalankan secara lokal
 
@@ -24,7 +24,17 @@ cp .env.example .env
 npm run dev
 ```
 
-Isi variabel di `.env` sesuai kebutuhan. Jangan commit file `.env`.
+Buka http://localhost:3000. Isi variabel di `.env` sesuai kebutuhan, dan jangan commit file `.env`.
+
+### Perintah yang tersedia
+
+| Perintah | Fungsi |
+| --- | --- |
+| `npm run dev` | Menjalankan dev server di port 3000 |
+| `npm run build` | Build produksi ke folder `dist` |
+| `npm run preview` | Melihat hasil build secara lokal |
+| `npm run lint` | Cek tipe TypeScript |
+| `npm run clean` | Menghapus folder `dist` |
 
 ## Sebelum dipakai: GANTI DATA PRIBADI
 
@@ -41,7 +51,8 @@ Repo ini berisi data milik pembuat aslinya. Kalau kamu mem-fork atau memakai kod
 
 1. Fork repo ini.
 2. Import ke [Vercel](https://vercel.com), lalu deploy.
-3. Tambahkan environment variable yang dibutuhkan (lihat `.env.example`) di Project Settings > Environment Variables, lalu redeploy.
+3. Build command: `npm run build`, output directory: `dist` (Vercel biasanya mendeteksinya otomatis untuk Vite).
+4. Tambahkan environment variable yang dibutuhkan (lihat `.env.example`) di Project Settings > Environment Variables, lalu redeploy.
 
 ## Lisensi
 
